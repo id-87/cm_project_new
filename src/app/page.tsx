@@ -25,7 +25,7 @@ export default function SkillMatrix() {
     const savedNodes = localStorage.getItem('matrix-nodes');
     const savedEdges = localStorage.getItem('matrix-edges');
 
-    if (savedNodes && savedEdges) {
+    if (savedNodes && savedEdges && savedNodes !== "[]") {
       setNodes(JSON.parse(savedNodes));
       setEdges(JSON.parse(savedEdges));
     } else {
@@ -34,7 +34,7 @@ export default function SkillMatrix() {
       setEdges(seed.edges);
     }
     setIsLoaded(true);
-  }, []);
+  }, [setNodes, setEdges]);
 
   useEffect(() => {
     if (isLoaded) {
@@ -56,7 +56,6 @@ export default function SkillMatrix() {
 
   return (
     <div className="app-container">
-      {/* Main Graph Area */}
       <div className="graph-area">
         <div className="graph-header">
           <h1>Team Skill Matrix</h1>
@@ -78,15 +77,12 @@ export default function SkillMatrix() {
         </ReactFlow>
       </div>
 
-      {/* Side Panel */}
       <div className="side-panel">
         <h2 className="panel-title">Details Panel</h2>
         
         {selectedNode ? (
           <div>
-            <h3 className="detail-heading">
-              {selectedNode.data.label}
-            </h3>
+            <h3 className="detail-heading">{selectedNode.data.label}</h3>
             <p className="detail-type">
               Type: {selectedNode.type === 'personNode' ? 'Team Member' : 'Skill'}
             </p>
@@ -101,7 +97,7 @@ export default function SkillMatrix() {
                     const otherNode = nodes.find((n) => n.id === otherId);
                     return (
                       <li key={e.id}>
-                        {otherNode?.data.label} <span className="proficiency-label">({e.label})</span>
+                        {otherNode?.data.label || 'Unknown'} <span className="proficiency-label">({e.label})</span>
                       </li>
                     );
                   })}
