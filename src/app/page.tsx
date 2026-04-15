@@ -21,11 +21,9 @@ export default function SkillMatrix() {
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-
   const [activeTab, setActiveTab] = useState<'details' | 'add'>('details');
   const [addType, setAddType] = useState<'person' | 'skill' | 'connection'>('person');
 
-  
   const [formData, setFormData] = useState({
     name: '',
     roleCategory: '',
@@ -66,8 +64,6 @@ export default function SkillMatrix() {
     setActiveTab('details');
   };
 
-
-
   const handleDeleteNode = () => {
     if (!selectedNode) return;
     setNodes(nodes.filter(n => n.id !== selectedNode.id));
@@ -79,7 +75,8 @@ export default function SkillMatrix() {
     e.preventDefault();
     if (!selectedNode) return;
     
-    const updatedName = (e.target as any).nodeName.value;
+    // Bug fixed: using nodeLabel instead of nodeName
+    const updatedName = (e.target as any).nodeLabel.value;
     const updatedSub = (e.target as any).nodeSub.value;
 
     setNodes(nodes.map(n => {
@@ -95,7 +92,6 @@ export default function SkillMatrix() {
       }
       return n;
     }));
-    
     
     setSelectedNode({
        ...selectedNode,
@@ -183,7 +179,8 @@ export default function SkillMatrix() {
                 <form onSubmit={handleUpdateNode} className="edit-form">
                   <h3 className="form-title">Edit Node</h3>
                   <label>Name</label>
-                  <input type="text" name="nodeName" defaultValue={selectedNode.data.label} required />
+                  {/* Bug fixed: name="nodeLabel" */}
+                  <input type="text" name="nodeLabel" defaultValue={selectedNode.data.label} required />
                   
                   <label>{selectedNode.type === 'personNode' ? 'Role' : 'Category'}</label>
                   <input type="text" name="nodeSub" defaultValue={selectedNode.type === 'personNode' ? selectedNode.data.role : selectedNode.data.category} required />

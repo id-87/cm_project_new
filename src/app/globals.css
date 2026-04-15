@@ -6,7 +6,7 @@
 
 body {
   font-family: system-ui, -apple-system, sans-serif;
-  background-color: #f0f4f8; 
+  background-color: #f0f4f8;
   color: #0f172a;
 }
 
@@ -46,7 +46,6 @@ body {
   font-size: 0.875rem;
   color: #64748b;
 }
-
 
 .side-panel {
   width: 360px;
@@ -89,7 +88,6 @@ body {
 .panel-content {
   padding: 1.5rem;
 }
-
 
 .edit-form {
   display: flex;
@@ -143,7 +141,6 @@ input:focus, select:focus {
   cursor: pointer;
 }
 
-
 .btn-primary {
   margin-top: 0.5rem;
   padding: 0.5rem 1rem;
@@ -176,7 +173,6 @@ input:focus, select:focus {
 .btn-delete:hover {
   background-color: #ffe4e6;
 }
-
 
 .connections-wrapper {
   margin-top: 1.5rem;
@@ -218,9 +214,9 @@ input:focus, select:focus {
   color: #64748b;
   font-size: 0.875rem;
 }
+
 .mt-4 { margin-top: 1rem; }
 .mt-2 { margin-top: 0.5rem; }
-
 
 .custom-node {
   padding: 0.5rem 1rem;
@@ -251,13 +247,13 @@ input:focus, select:focus {
 }
 
 .node-person {
-  background: linear-gradient(135deg, #92400e, #78350f); /* Brown Gradient */
+  background: linear-gradient(135deg, #92400e, #78350f); 
   border-color: #451a03;
   border-radius: 50px;
 }
 
 .node-skill {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8); /* Blue Gradient */
+  background: linear-gradient(135deg, #2563eb, #1d4ed8); 
   border-color: #1e3a8a;
   border-radius: 8px;
 }
