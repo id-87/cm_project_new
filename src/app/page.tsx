@@ -8,6 +8,7 @@ import {
   addEdge,
   Connection,
   Edge,
+  Node,
   Background,
   Controls,
 } from '@xyflow/react';
@@ -16,9 +17,11 @@ import { getSeedData } from '@/data/seed';
 import { nodeTypes } from '@/components/CustomNodes';
 
 export default function SkillMatrix() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  
   const [isLoaded, setIsLoaded] = useState(false);
 
   const [activeTab, setActiveTab] = useState<'details' | 'add'>('details');
@@ -59,7 +62,7 @@ export default function SkillMatrix() {
     [setEdges]
   );
 
-  const onNodeClick = (event: React.MouseEvent, node: any) => {
+  const onNodeClick = (event: React.MouseEvent, node: Node) => {
     setSelectedNode(node);
     setActiveTab('details');
   };
@@ -75,7 +78,6 @@ export default function SkillMatrix() {
     e.preventDefault();
     if (!selectedNode) return;
     
-    // Bug fixed: using nodeLabel instead of nodeName
     const updatedName = (e.target as any).nodeLabel.value;
     const updatedSub = (e.target as any).nodeSub.value;
 
@@ -112,29 +114,32 @@ export default function SkillMatrix() {
     const id = `new-${Date.now()}`;
 
     if (addType === 'person') {
-      setNodes([...nodes, {
+      const newNode: Node = {
         id,
         type: 'personNode',
         position: { x: Math.random() * 200 + 100, y: Math.random() * 200 + 100 },
         data: { label: formData.name, role: formData.roleCategory }
-      }]);
+      };
+      setNodes([...nodes, newNode]);
     } else if (addType === 'skill') {
-      setNodes([...nodes, {
+      const newNode: Node = {
         id,
         type: 'skillNode',
         position: { x: Math.random() * 200 + 100, y: Math.random() * 200 + 400 },
         data: { label: formData.name, category: formData.roleCategory }
-      }]);
+      };
+      setNodes([...nodes, newNode]);
     } else if (addType === 'connection') {
       if (!formData.personId || !formData.skillId) return alert("Select both a person and a skill.");
-      setEdges([...edges, {
+      const newEdge: Edge = {
         id: `e-${formData.personId}-${formData.skillId}-${Date.now()}`,
         source: formData.personId,
         target: formData.skillId,
         label: formData.proficiency,
         animated: formData.proficiency === 'learning',
         style: { stroke: formData.proficiency === 'expert' ? '#16a34a' : '#2563eb', strokeWidth: 2 }
-      }]);
+      };
+      setEdges([...edges, newEdge]);
     }
     
     setFormData({ name: '', roleCategory: '', personId: '', skillId: '', proficiency: 'familiar' });
@@ -179,7 +184,6 @@ export default function SkillMatrix() {
                 <form onSubmit={handleUpdateNode} className="edit-form">
                   <h3 className="form-title">Edit Node</h3>
                   <label>Name</label>
-                  {/* Bug fixed: name="nodeLabel" */}
                   <input type="text" name="nodeLabel" defaultValue={selectedNode.data.label} required />
                   
                   <label>{selectedNode.type === 'personNode' ? 'Role' : 'Category'}</label>
@@ -202,7 +206,7 @@ export default function SkillMatrix() {
                         return (
                           <li key={e.id} className="connection-item">
                             <span>
-                              <strong>{otherNode?.data.label || 'Unknown'}</strong> <span className="proficiency-label">({e.label})</span>
+                              <strong>{otherNode?.data?.label as string || 'Unknown'}</strong> <span className="proficiency-label">({e.label as string})</span>
                             </span>
                             <button onClick={() => handleDeleteEdge(e.id)} className="btn-icon-delete" title="Remove Connection">✕</button>
                           </li>
@@ -249,13 +253,13 @@ export default function SkillMatrix() {
                   <label>Person</label>
                   <select value={formData.personId} onChange={e => setFormData({...formData, personId: e.target.value})} required>
                     <option value="">Select Person...</option>
-                    {nodes.filter(n => n.type === 'personNode').map(n => <option key={n.id} value={n.id}>{n.data.label}</option>)}
+                    {nodes.filter(n => n.type === 'personNode').map(n => <option key={n.id} value={n.id}>{n.data.label as string}</option>)}
                   </select>
 
                   <label>Skill</label>
                   <select value={formData.skillId} onChange={e => setFormData({...formData, skillId: e.target.value})} required>
                     <option value="">Select Skill...</option>
-                    {nodes.filter(n => n.type === 'skillNode').map(n => <option key={n.id} value={n.id}>{n.data.label}</option>)}
+                    {nodes.filter(n => n.type === 'skillNode').map(n => <option key={n.id} value={n.id}>{n.data.label as string}</option>)}
                   </select>
 
                   <label>Proficiency</label>
